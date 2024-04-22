@@ -23,7 +23,12 @@ const getSingleUser = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  return;
+  try {
+    const user = await User.create(req.body);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 const deleteUser = async (req, res) => {
