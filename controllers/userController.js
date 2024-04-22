@@ -40,7 +40,22 @@ const updateUser = async (req, res) => {
 };
 
 const addNewFriend = async (req, res) => {
-  return;
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { runValidators: true, new: true }
+    );
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "No user was found with that ID" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 const deleteFriend = async (req, res) => {
