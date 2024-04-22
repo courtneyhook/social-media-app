@@ -1,17 +1,13 @@
 const { ObjectId } = require("mongoose").Types;
 const { User, Thought } = require("../models");
 
-const friendCount = async () => {
-  const numberOfFriends = await User.aggregate().count("friendCount");
-  return numberOfFriends;
-};
-
 const getUsers = async (req, res) => {
-  console.log("user route");
   try {
     const users = await User.find({});
 
-    res.json(users);
+    res.json({
+      users,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -19,7 +15,17 @@ const getUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  return;
+  try {
+    const user = await User.findOne({ _id: req.params.userId }).select("-__v");
+
+    if (!user) {
+      return res.status(404).json({ message: "No user with this ID" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };
 
 const createUser = async (req, res) => {
@@ -32,7 +38,21 @@ const createUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  return;
+  try {
+    const user = await User.findOneAndDelete({
+      _id: req.params.userId,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User does not exist.",
+      });
+    }
+
+    res.json({ message: "User successfully deleted." });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 const updateUser = async (req, res) => {
