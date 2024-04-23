@@ -1,8 +1,15 @@
 const { ObjectId } = require("mongoose").Types;
 const { User, Thought } = require("../models");
 
-const getThoughts = async () => {
-  return;
+const getThoughts = async (req, res) => {
+  try {
+    const thoughts = await Thought.find({});
+
+    res.json({ thoughts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
 };
 
 const getSingleThought = async (req, res) => {
