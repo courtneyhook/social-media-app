@@ -1,6 +1,8 @@
 const { ObjectId } = require("mongoose").Types;
+const { Timestamp } = require("bson");
 const { User, Thought } = require("../models");
 const { findByIdAndUpdate } = require("../models/User");
+const { formatDate } = require("../utils/dateformat");
 
 const getThoughts = async (req, res) => {
   try {
@@ -31,6 +33,8 @@ const getSingleThought = async (req, res) => {
 
 const createThought = async (req, res) => {
   try {
+    const dateObj = new Date().toString().console.log(dateObj);
+
     const thought = await Thought.create(req.body);
     const user = await User.findOneAndUpdate(
       { _id: req.body.userId },
