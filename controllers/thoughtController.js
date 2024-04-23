@@ -13,7 +13,19 @@ const getThoughts = async (req, res) => {
 };
 
 const getSingleThought = async (req, res) => {
-  return;
+  try {
+    const thought = await Thought.findOne({ _id: req.params.thoughtId }).select(
+      "-__v"
+    );
+
+    if (!thought) {
+      return res.status(404).json({ message: "No thought with this ID" });
+    }
+
+    res.json({ thought });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
 };
 
 const createThought = async (req, res) => {
