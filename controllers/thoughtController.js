@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongoose").Types;
 const { User, Thought } = require("../models");
+const { findByIdAndUpdate } = require("../models/User");
 
 const getThoughts = async (req, res) => {
   try {
@@ -86,7 +87,24 @@ const deleteThought = async (req, res) => {
 };
 
 const addReaction = async (req, res) => {
-  return;
+  try {
+    const thought = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $addToSet: { reactions: req.body } },
+      { new: true }
+    );
+
+    if (!thought) {
+      return res
+        .status(404)
+        .json({ message: "There is no thought with that ID" });
+    }
+
+    res.json(thought);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
 };
 
 const deleteReaction = async (req, res) => {
