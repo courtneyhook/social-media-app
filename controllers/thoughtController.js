@@ -33,8 +33,6 @@ const getSingleThought = async (req, res) => {
 
 const createThought = async (req, res) => {
   try {
-    const dateObj = new Date().toString().console.log(dateObj);
-
     const thought = await Thought.create(req.body);
     const user = await User.findOneAndUpdate(
       { _id: req.body.userId },
