@@ -50,11 +50,39 @@ const createThought = async (req, res) => {
 };
 
 const updateThought = async (req, res) => {
-  return;
+  try {
+    const thought = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    );
+
+    if (!thought) {
+      res.status(404).json({ message: "No thought with this ID" });
+    }
+
+    res.json(thought);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 const deleteThought = async (req, res) => {
-  return;
+  try {
+    const thought = await Thought.findOneAndDelete({
+      _id: req.params.thoughtId,
+    });
+
+    if (!thought) {
+      return res.status(404).json({
+        message: "There is no thought with that ID",
+      });
+    }
+
+    res.json({ message: "Thought successfully deleted." });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 const addReaction = async (req, res) => {
